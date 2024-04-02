@@ -158,7 +158,7 @@ class _FourDigitsGameState extends State<FourDigitsGame> {
                       width: 50.0,
                       height: 50.0,
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black),
+                        border: Border(bottom: BorderSide(color: Colors.black)),
                       ),
                       child: Center(
                         child: TextField(
@@ -166,6 +166,9 @@ class _FourDigitsGameState extends State<FourDigitsGame> {
                             textAlign: TextAlign.center,
                             keyboardType: TextInputType.number,
                             focusNode: focusNodes[index],
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                            ),
                             onChanged: (value) {
                               if (value.length > 0) {
                                 if (index < controllers.length - 1) {
