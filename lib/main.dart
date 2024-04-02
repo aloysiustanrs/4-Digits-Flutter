@@ -29,6 +29,8 @@ class _FourDigitsGameState extends State<FourDigitsGame> {
   List<TextEditingController> controllers =
       List.generate(4, (index) => TextEditingController());
 
+  List<FocusNode> focusNodes = List.generate(4, (index) => FocusNode());
+
   @override
   void initState() {
     super.initState();
@@ -136,11 +138,12 @@ class _FourDigitsGameState extends State<FourDigitsGame> {
                       controller: controllers[index],
                       textAlign: TextAlign.center,
                       keyboardType: TextInputType.number,
-                      maxLength: 1,
+                      focusNode: focusNodes[index],
                       onChanged: (value) {
                         if (value.length > 0) {
                           if (index < controllers.length - 1) {
-                            FocusScope.of(context).nextFocus();
+                            FocusScope.of(context)
+                                .requestFocus(focusNodes[index + 1]);
                           } else {
                             FocusScope.of(context).unfocus();
                           }
@@ -154,6 +157,9 @@ class _FourDigitsGameState extends State<FourDigitsGame> {
             SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () {
+                // Move focus to the first TextField
+                FocusScope.of(context).requestFocus(focusNodes[0]);
+
                 List<String> fourDigitsAnswer = [];
                 for (var controller in controllers) {
                   fourDigitsAnswer.add(controller.text);
@@ -202,6 +208,10 @@ class _FourDigitsGameState extends State<FourDigitsGame> {
                     );
                   },
                 );
+                // Clear all inputs
+                for (var controller in controllers) {
+                  controller.clear();
+                }
               },
               child: Text('Guess'),
             ),
