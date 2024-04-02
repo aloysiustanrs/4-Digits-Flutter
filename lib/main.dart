@@ -26,6 +26,8 @@ class FourDigitsGame extends StatefulWidget {
 class _FourDigitsGameState extends State<FourDigitsGame> {
   bool showPopup = false;
 
+  int totalTries = 0;
+
   List<String> fourDigitsActual = [];
 
   List<TextEditingController> controllers =
@@ -36,10 +38,16 @@ class _FourDigitsGameState extends State<FourDigitsGame> {
   @override
   void initState() {
     super.initState();
+    startGame();
+  }
+
+  void startGame() {
+    totalTries = 0;
+    fourDigitsActual = [];
     generateFourDigitsActual();
   }
 
-  void generateFourDigitsActual() {
+  generateFourDigitsActual() {
     String numberList = "0123456789";
     final random = Random();
     for (int i = 0; i < 4; i++) {
@@ -82,49 +90,36 @@ class _FourDigitsGameState extends State<FourDigitsGame> {
       fourDigitsAnswer.add(controller.text);
     }
     final response = check(fourDigitsAnswer, fourDigitsActual);
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Result'),
-          content: Text(response),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                if (response == '4 A & 0 B') {
-                  Navigator.pop(context);
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Congratulations!'),
-                        content: Text(
-                          'You have solved the four digits!',
-                        ),
-                        actions: [
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.popUntil(
-                                context,
-                                (route) => route.isFirst,
-                              );
-                            },
-                            child: Text('Close'),
-                          ),
-                        ],
-                      );
-                    },
+    totalTries += 1;
+    if (response == '4 A & 0 B') {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Congratulations!'),
+            content: Text('You have solved the four digits!\n\n'
+                    "Total Tries: " +
+                totalTries.toString()),
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.popUntil(
+                    context,
+                    (route) => route.isFirst,
                   );
-                } else {
-                  Navigator.pop(context);
-                }
-              },
-              child: Text('Close'),
-            ),
-          ],
-        );
-      },
-    );
+                  // Restart the game
+                  setState(() {
+                    startGame();
+                  });
+                },
+                child: Text('Close'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     // Clear all inputs
     for (var controller in controllers) {
       controller.clear();
@@ -142,7 +137,7 @@ class _FourDigitsGameState extends State<FourDigitsGame> {
           Padding(
             padding: EdgeInsets.all(20.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SizedBox(height: 20.0),
                 Text(
@@ -192,6 +187,8 @@ class _FourDigitsGameState extends State<FourDigitsGame> {
                     ),
                   ),
                 ),
+                SizedBox(height: 20.0),
+                Text("Total tries: " + totalTries.toString()),
                 SizedBox(height: 20.0),
                 ElevatedButton(
                   onPressed: () {
