@@ -37,6 +37,15 @@ class _FourDigitsGameState extends State<FourDigitsGame> {
     generateFourDigitsActual();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Request focus on the first TextField when the app starts after a short delay
+    Future.delayed(Duration.zero, () {
+      FocusScope.of(context).requestFocus(focusNodes[0]);
+    });
+  }
+
   void generateFourDigitsActual() {
     String numberList = "0123456789";
     final random = Random();
