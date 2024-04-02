@@ -30,6 +30,8 @@ class _FourDigitsGameState extends State<FourDigitsGame> {
 
   List<String> fourDigitsActual = [];
 
+  List<List> answersHistory = [];
+
   List<TextEditingController> controllers =
       List.generate(4, (index) => TextEditingController());
 
@@ -44,6 +46,7 @@ class _FourDigitsGameState extends State<FourDigitsGame> {
   void startGame() {
     totalTries = 0;
     fourDigitsActual = [];
+    answersHistory = [];
     generateFourDigitsActual();
   }
 
@@ -90,13 +93,17 @@ class _FourDigitsGameState extends State<FourDigitsGame> {
       fourDigitsAnswer.add(controller.text);
     }
     final response = check(fourDigitsAnswer, fourDigitsActual);
+
+    List<String> singleAnswerHistory = [fourDigitsAnswer.join(''), response];
+    answersHistory.insert(0, singleAnswerHistory);
+
     totalTries += 1;
     if (response == '4 A & 0 B') {
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Congratulations!'),
+            title: const Text('Congratulations!'),
             content: Text('You have solved the four digits!\n\n'
                     "Total Tries: " +
                 totalTries.toString()),
@@ -112,7 +119,7 @@ class _FourDigitsGameState extends State<FourDigitsGame> {
                     startGame();
                   });
                 },
-                child: Text('Close'),
+                child: const Text('Close'),
               ),
             ],
           );
@@ -130,21 +137,21 @@ class _FourDigitsGameState extends State<FourDigitsGame> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('4 Digits Game'),
+        title: const Text('4 Digits Game'),
       ),
       body: Stack(
         children: [
           Padding(
-            padding: EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(20.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(height: 20.0),
-                Text(
+                const SizedBox(height: 20.0),
+                const Text(
                   'Welcome to the 4 digits game!',
                   style: TextStyle(fontSize: 20.0),
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: List.generate(
@@ -152,7 +159,7 @@ class _FourDigitsGameState extends State<FourDigitsGame> {
                     (index) => Container(
                       width: 50.0,
                       height: 50.0,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         border: Border(bottom: BorderSide(color: Colors.black)),
                       ),
                       child: Center(
@@ -161,7 +168,7 @@ class _FourDigitsGameState extends State<FourDigitsGame> {
                             textAlign: TextAlign.center,
                             keyboardType: TextInputType.number,
                             focusNode: focusNodes[index],
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               border: InputBorder.none,
                             ),
                             onChanged: (value) {
@@ -187,9 +194,9 @@ class _FourDigitsGameState extends State<FourDigitsGame> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 Text("Total tries: " + totalTries.toString()),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 ElevatedButton(
                   onPressed: () {
                     // Move focus to the first TextField
@@ -201,7 +208,75 @@ class _FourDigitsGameState extends State<FourDigitsGame> {
                     }
                     performGuessAction();
                   },
-                  child: Text('Guess'),
+                  child: const Text('Guess'),
+                ),
+                const SizedBox(height: 20.0),
+                const Text(
+                  "Answers History:",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 5.0),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: answersHistory.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      // Split the entry into answer and response
+                      final answer = answersHistory[index][0];
+                      final response = answersHistory[index][1];
+
+                      // Create a custom ListTile for each entry
+                      return Container(
+                        margin: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: ListTile(
+                          title: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10.0),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.blue,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10.0),
+                                      bottomLeft: Radius.circular(10.0),
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      answer,
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10.0),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.green,
+                                    borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(10.0),
+                                      bottomRight: Radius.circular(10.0),
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      response,
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
@@ -209,7 +284,7 @@ class _FourDigitsGameState extends State<FourDigitsGame> {
           if (showPopup)
             Center(
               child: Container(
-                padding: EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   boxShadow: [
@@ -217,12 +292,12 @@ class _FourDigitsGameState extends State<FourDigitsGame> {
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 5,
-                      offset: Offset(0, 3),
+                      offset: const Offset(0, 3),
                     ),
                   ],
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                child: Text(
+                child: const Text(
                   'Rules:\n\n'
                   'You have to guess a 4-digit number where each digit is unique.\n\n'
                   'After you have entered all 4 digits to guess, feedback will be provided in the form of A and B.\n\n'
