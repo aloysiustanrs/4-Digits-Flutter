@@ -207,9 +207,7 @@ class _FourDigitsGameState extends State<FourDigitsGame> {
             ),
           ),
           if (showPopup)
-            Positioned(
-              top: 20.0,
-              right: 20.0,
+            Center(
               child: Container(
                 padding: EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
