@@ -227,13 +227,12 @@ class _FourDigitsGameState extends State<FourDigitsGame> {
                 ),
                 child: Text(
                   'Rules:\n\n'
-                  '1. You have to guess a 4-digit number where each digit is unique.\n\n'
-                  '2. After you have entered all 4 digits to guess, feedback will be provided in the form of A and B.\n\n'
-                  '3. A indicates a digit exists in the answer and is in the right position.\n\n'
-                  '4. B indicates a digit exists in the answer but not in the right position.\n\n'
-                  '5. Example: 1A = 1 digit exists in the answer and is in the right position.\n\n'
-                  '6. Example: 1B = 1 digit exists in the answer but not in the right position.\n\n'
-                  '7. Hope you understand the rules, best of luck!',
+                  'You have to guess a 4-digit number where each digit is unique.\n\n'
+                  'After you have entered all 4 digits to guess, feedback will be provided in the form of A and B.\n\n'
+                  'A indicates a digit exists in the answer and is in the right position.\n\n'
+                  'B indicates a digit exists in the answer but is in the wrong position.\n\n'
+                  'Example: Answer is 1234 and you input 1320, feedback will be 1A & 2B because one number (\'1\') exists and is in the right position and two numbers (\'2\' and \'3\') exists but is in the wrong position\n\n'
+                  'Good luck and have fun!',
                   style: TextStyle(
                     fontSize: 16.0,
                   ),
